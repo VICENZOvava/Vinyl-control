@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model USUARIO {
+  id_usuario Int    @id @default(autoincrement())
+  nome       String @db.VarChar(100)
+  email      String @unique @db.VarChar(100)
+  senha      String @db.VarChar(100)
+
+  movimentacoes_estoque MOVIMENTACAO_ESTOQUE[]
+}
+
+model DISCO {
+  id_disco           Int     @id @default(autoincrement())
+  titulo             String? @db.VarChar(150)
+  artista            String? @db.VarChar(100)
+  genero             String? @db.VarChar(50)
+  preco_custo        Decimal? @db.Decimal(10, 2)
+  preco_venda        Decimal? @db.Decimal(10, 2)
+  quantidade_estoque Int?
+  estoque_minimo     Int?
+  ativo              Boolean @default(true)
+
+  movimentacoes_estoque MOVIMENTACAO_ESTOQUE[]
+}
+
+enum TipoMovimentacao {
+  entrada
+  saida
+}
+
+model MOVIMENTACAO_ESTOQUE {
+  id_movimentacao Int      @id @default(autoincrement())
+  id_disco        Int
+  id_usuario      Int
+  tipo_movimentacao TipoMovimentacao
+  quantidade      Int
+  data_movimentacao DateTime @db.Date
+  observacao      String?  @db.VarChar(250)
+
+  usuario USUARIO @relation(fields: [id_usuario], references: [id_usuario])
+  disco   DISCO   @relation(fields: [id_disco], references: [id_disco])
+}

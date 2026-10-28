@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#11100e">
+  <title>Vinyl Control | Acervo e estoque</title><link rel="stylesheet" href="style.css"><script src="script.js" defer></script>
+</head>
+<body>
+  <main id="loginScreen" class="auth-screen"><section class="auth-content">
+      <form id="loginForm" class="auth-card">
+        <div class="mobile-brand"><span class="brand-mark">V</span> VINYL CONTROL</div><span class="eyebrow accent">ACESSO RESTRITO</span>
+        <h2>Bem-vindo de volta</h2><p class="muted">Entre com seu e-mail e senha para continuar.</p>
+        <label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="username" placeholder="voce@exemplo.com" required>
+        <label for="password">Senha</label><div class="password-wrap"><input id="password" name="password" type="password" autocomplete="current-password" placeholder="Sua senha" required><button id="togglePassword" class="text-button" type="button" aria-label="Mostrar senha" aria-pressed="false">Mostrar</button></div>
+        <p id="loginFeedback" class="notice error" role="alert" aria-live="polite" hidden></p>
+        <button id="loginButton" class="button primary full" type="submit">Entrar <span aria-hidden="true">→</span></button><p class="auth-foot">Acesso exclusivo para usuários cadastrados.</p>
+      </form>
+    </section>
+  </main>
+
+  <div id="appScreen" class="app-shell" hidden>
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Vinyl Control"><span class="brand-mark">V</span> VINYL CONTROL</a><span class="nav-label">MENU</span>
+      <nav class="main-nav" aria-label="Navegação principal">
+        <button class="nav-item active" type="button" data-view="dashboard"><span class="nav-icon">⌂</span> Visão geral</button>
+        <button class="nav-item" type="button" data-view="discs"><span class="nav-icon">◉</span> Cadastro de discos</button>
+        <button class="nav-item" type="button" data-view="stock"><span class="nav-icon">↕</span> Acervo e vendas</button>
+      </nav>
+      
+    </aside>
+    <div class="app-main">
+      <header class="topbar"><div><span id="pageEyebrow" class="eyebrow">PAINEL</span><h1 id="pageTitle">Visão geral</h1></div>
+        <div class="user-area"><div class="user-copy"><strong id="userName">Usuário</strong><span id="userEmail"></span></div><button id="logoutButton" class="button quiet" type="button">Sair <span aria-hidden="true">↗</span></button></div>
+      </header>
+      <main class="content">
+        <section id="dashboardView" class="view">
+          <div class="welcome-banner"><div><span class="eyebrow">PAINEL DO ACERVO</span><h2>Bom ter você por aqui.</h2><p>Veja como está sua coleção e acesse rapidamente as tarefas do dia.</p></div></div>
+          <div id="dashboardFeedback" class="notice" role="status" hidden></div>
+          <div class="metric-grid">
+            <article class="metric-card"><span class="metric-label">DISCOS CADASTRADOS</span><strong id="metricDiscs">—</strong><span class="metric-caption">títulos no seu acervo</span></article>
+            <article class="metric-card"><span class="metric-label">UNIDADES EM ESTOQUE</span><strong id="metricUnits">—</strong><span class="metric-caption">unidades disponíveis</span></article>
+            <article class="metric-card metric-warning"><span class="metric-label">ABAIXO DO MÍNIMO</span><strong id="metricLow">—</strong><span class="metric-caption">discos precisam de reposição</span></article>
+          </div>
+          <div class="section-heading"><div><span class="eyebrow accent">ATALHOS</span><h2>O que você precisa fazer?</h2></div></div>
+          <div class="shortcut-grid">
+            <button class="shortcut-card" type="button" data-view="discs"><span class="shortcut-icon">＋</span><span><strong>Cadastrar um disco</strong><small>Adicione ou atualize os dados do acervo.</small></span><span class="shortcut-arrow">→</span></button>
+            <button class="shortcut-card" type="button" data-view="stock"><span class="shortcut-icon">↕</span><span><strong>Registrar movimentação</strong><small>Lance uma reposição ou uma venda.</small></span><span class="shortcut-arrow">→</span></button>
+          </div>
+        </section>
+
+        <section id="discsView" class="view" hidden>
+          <div class="section-heading page-section-heading"><div><span class="eyebrow accent">SEU CATÁLOGO</span><h2>Cadastro de discos</h2><p class="muted">Consulte, cadastre e mantenha os dados dos seus discos atualizados.</p></div><button id="newDiskButton" class="button primary" type="button"><span aria-hidden="true">＋</span> Novo disco</button></div>
+          <div id="discsFeedback" class="notice" role="status" hidden></div>
+          <form id="searchForm" class="search-bar"><label class="sr-only" for="searchInput">Buscar por título, artista ou gênero</label><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Buscar por título, artista ou gênero"><button class="button secondary" type="submit">Buscar</button><button id="clearSearchButton" class="button quiet" type="button">Limpar</button></form>
+          <div class="table-card"><div class="table-topline"><strong>Discos cadastrados</strong><span id="discCount" class="count-label">0 discos</span></div>
+            <div class="table-scroll"><table><thead><tr><th>DISCO</th><th>GÊNERO</th><th>CUSTO</th><th>VENDA</th><th>ESTOQUE</th><th>MÍNIMO</th><th>AÇÕES</th></tr></thead><tbody id="discsTableBody"></tbody></table></div><div id="discsEmpty" class="empty-state" hidden>Nenhum disco encontrado.</div>
+          </div>
+        </section>
+
+        <section id="stockView" class="view" hidden>
+          <div class="section-heading page-section-heading"><div><span class="eyebrow accent">ENTRADAS E SAÍDAS</span><h2>Gestão de acervo e vendas</h2><p class="muted">Registre movimentações e acompanhe os níveis do estoque.</p></div></div>
+          <div id="stockFeedback" class="notice" role="status" hidden></div>
+          <div class="stock-layout">
+            <form id="movementForm" class="panel movement-form">
+              <div class="panel-heading"><span class="eyebrow accent">NOVA MOVIMENTAÇÃO</span><h3>Registrar movimento</h3></div>
+              <label for="movementDisk">Disco</label><select id="movementDisk" required><option value="">Selecione um disco</option></select><p id="selectedDiskInfo" class="field-hint">Escolha um disco para ver o estoque atual.</p>
+              <label for="movementType">Tipo de movimentação</label><select id="movementType" required><option value="entrada">Reposição / compra (entrada)</option><option value="saida">Venda (saída)</option></select>
+              <div class="field-row"><div><label for="movementQuantity">Quantidade</label><input id="movementQuantity" type="number" min="1" step="1" required placeholder="Ex.: 2"></div><div><label for="movementDate">Data</label><input id="movementDate" type="date" required></div></div>
+              <label for="movementNote">Observação <span class="optional">(opcional)</span></label><input id="movementNote" type="text" maxlength="250" placeholder="Ex.: compra de fornecedor">
+              <button id="movementButton" class="button primary full" type="submit">Salvar movimentação <span aria-hidden="true">→</span></button>
+            </form>
+            <div class="panel inventory-panel"><div class="panel-heading"><span class="eyebrow accent">ACOMPANHAMENTO</span><h3>Estoque atual</h3><p class="muted">Lista em ordem alfabética pelo título.</p></div><div class="inventory-list" id="inventoryList"></div><div id="inventoryEmpty" class="empty-state" hidden>Nenhum disco cadastrado.</div></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="diskDialog" class="disk-dialog">
+    <form id="diskForm" class="dialog-card">
+      <div class="dialog-heading"><div><span id="diskDialogEyebrow" class="eyebrow accent">NOVO ITEM</span><h2 id="diskDialogTitle">Cadastrar disco</h2><p class="muted">Preencha os dados para manter seu acervo atualizado.</p></div><button id="closeDiskDialog" class="icon-button" type="button" aria-label="Fechar">×</button></div>
+      <input id="diskId" type="hidden">
+      <div class="form-grid">
+        <div class="span-two"><label for="diskTitle">Título</label><input id="diskTitle" required maxlength="150" placeholder="Ex.: Abbey Road"></div>
+        <div><label for="diskArtist">Artista</label><input id="diskArtist" required maxlength="100" placeholder="Ex.: The Beatles"></div><div><label for="diskGenre">Gênero</label><input id="diskGenre" required maxlength="50" placeholder="Ex.: Rock"></div>
+        <div><label for="diskCost">Preço de custo (R$)</label><input id="diskCost" type="number" min="0" step="0.01" required placeholder="0,00"></div><div><label for="diskPrice">Preço de venda (R$)</label><input id="diskPrice" type="number" min="0" step="0.01" required placeholder="0,00"></div>
+        <div><label for="diskQuantity">Quantidade em estoque</label><input id="diskQuantity" type="number" min="0" step="1" required placeholder="0"></div><div><label for="diskMinimum">Estoque mínimo</label><input id="diskMinimum" type="number" min="0" step="1" required placeholder="0"></div>
+      </div>
+      <p id="diskFormFeedback" class="notice error" role="alert" hidden></p>
+      <div class="dialog-actions"><button id="cancelDiskButton" class="button secondary" type="button">Cancelar</button><button id="saveDiskButton" class="button primary" type="submit">Salvar disco <span aria-hidden="true">→</span></button></div>
+    </form>
+  </dialog>
+</body>
+</html>
+
